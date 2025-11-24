@@ -15,11 +15,26 @@ struct Ball {
           velY(vy),
           radius(r) {}
 
-    void UpdatePosition(float kGravity, float deltaTime){
-        // TODO: Add collision to wall
+    void UpdatePosition(float kGravity, float deltaTime, float kHeight, float kWidth){
+
         velY += kGravity * deltaTime;
         posX += velX * deltaTime;
         posY += velY * deltaTime;
+
+        if(posX >= kWidth - radius){
+            velX = -velX;
+        }
+        if(posX - radius <= 0){
+            velX = -velX;
+            posX = radius;
+        };
+        if(posY + radius >= kHeight && velY > 0){
+            velY = -velY;
+        }
+        if (posY - radius <= 0) {
+            velY = -velY;
+            posY = radius;
+        }
     }
 
     void Draw(){
@@ -38,14 +53,13 @@ int main() {
     Ball ball{
         50,
         kHeight - 50,
-        200,
-        -200,
-        50
+        50, 
+        -100,
+        25
     };
     while (!WindowShouldClose()) {
         float deltaTime = GetFrameTime();
-        ball.UpdatePosition(kGravity, deltaTime);
-        
+        ball.UpdatePosition(kGravity, deltaTime, kHeight, kWidth);
         BeginDrawing();
         ClearBackground(BLACK);
         ball.Draw();
